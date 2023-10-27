@@ -19,12 +19,60 @@ Eager to share your pet's adventures in an eco-friendly environment?
 
 We welcome contributions to make EcoPaws even better. Check out our `CONTRIBUTING.md` file for guidelines.
 
-## Connect with Us 🌍
+# Contributing to EcoPaws
+
+Thank you for your interest in contributing to EcoPaws! Here are some guidelines to help you get started:
+
+1. **Fork the Repository**: If you're not a direct contributor, start by forking this repository.
+2. **Clone Your Fork**: `git clone https://github.com/ecopawst/EcoPaws.git`
+3. **Make Changes**: Implement your features or bug fixes.
+4. **Commit and Push**: Commit your changes and push to your forked repository.
+5. **Open a Pull Request**: Come back to this repository and open a pull request detailing your changes.
+
+Please ensure your code adheres to our coding standards and include unit tests if applicable.
+
+For more detailed information or if you have questions, please contact the maintainers.
+
+
 
 
 ## License 📜
 
 EcoPaws is licensed under the [MIT License](LICENSE). Please see the `LICENSE` file for details.
+MIT License
+
+Copyright (c) [2023] [ecopawst]
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+# Contributing to EcoPaws
+
+Thank you for your interest in contributing to EcoPaws! Here are some guidelines to help you get started:
+
+1. **Fork the Repository**: If you're not a direct contributor, start by forking this repository.
+2. **Clone Your Fork**: `git clone https://github.com/YOUR_USERNAME/EcoPaws.git`
+3. **Make Changes**: Implement your features or bug fixes.
+4. **Commit and Push**: Commit your changes and push to your forked repository.
+5. **Open a Pull Request**: Come back to this repository and open a pull request detailing your changes.
+
+Please ensure your code adheres to our coding standards and include unit tests if applicable.
+
+For more detailed information or if you have questions, please contact the maintainers.
 
 ---
 
