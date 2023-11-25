@@ -13,18 +13,18 @@ Welcome to **EcoPaws**, an eco-friendly platform where our beloved pets are the 
 
 Eager to share your pet's adventures in an eco-friendly environment? 
 
-[Visit EcoPaws now!](https://ecopawst.com)
+[Visit EcoPawst now!](https://ecopawst.com)
 
-## Contribute to EcoPaws 💪
+## Contribute to EcoPawst 💪
 
 We welcome contributions to make EcoPaws even better. Check out our `CONTRIBUTING.md` file for guidelines.
 
-# Contributing to EcoPaws
+# Contributing to EcoPawst
 
 Thank you for your interest in contributing to EcoPaws! Here are some guidelines to help you get started:
 
 1. **Fork the Repository**: If you're not a direct contributor, start by forking this repository.
-2. **Clone Your Fork**: `git clone https://github.com/ecopawst/EcoPaws.git`
+2. **Clone Your Fork**: `git clone https://github.com/ecopawst/EcoPawst.git`
 3. **Make Changes**: Implement your features or bug fixes.
 4. **Commit and Push**: Commit your changes and push to your forked repository.
 5. **Open a Pull Request**: Come back to this repository and open a pull request detailing your changes.
@@ -60,12 +60,12 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
-# Contributing to EcoPaws
+# Contributing to EcoPawst
 
 Thank you for your interest in contributing to EcoPaws! Here are some guidelines to help you get started:
 
 1. **Fork the Repository**: If you're not a direct contributor, start by forking this repository.
-2. **Clone Your Fork**: `git clone https://github.com/YOUR_USERNAME/EcoPaws.git`
+2. **Clone Your Fork**: `git clone https://github.com/YOUR_USERNAME/EcoPawst.git`
 3. **Make Changes**: Implement your features or bug fixes.
 4. **Commit and Push**: Commit your changes and push to your forked repository.
 5. **Open a Pull Request**: Come back to this repository and open a pull request detailing your changes.
