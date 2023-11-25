@@ -17,7 +17,7 @@ Eager to share your pet's adventures in an eco-friendly environment?
 
 ## Contribute to EcoPawst 💪
 
-We welcome contributions to make EcoPaws even better. Check out our `CONTRIBUTING.md` file for guidelines.
+We welcome contributions to make EcoPawst even better. Check out our `CONTRIBUTING.md` file for guidelines.
 
 # Contributing to EcoPawst
 
@@ -62,7 +62,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 # Contributing to EcoPawst
 
-Thank you for your interest in contributing to EcoPaws! Here are some guidelines to help you get started:
+Thank you for your interest in contributing to EcoPawst! Here are some guidelines to help you get started:
 
 1. **Fork the Repository**: If you're not a direct contributor, start by forking this repository.
 2. **Clone Your Fork**: `git clone https://github.com/YOUR_USERNAME/EcoPawst.git`
