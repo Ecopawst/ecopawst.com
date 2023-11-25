@@ -1,4 +1,4 @@
-# EcoPaws 🐾
+# EcoPawst 🐾
 
 Welcome to **EcoPaws**, an eco-friendly platform where our beloved pets are the stars of the show! Join us in celebrating the bond between pets and their humans in an environment that emphasizes sustainability and love for our planet.
 
