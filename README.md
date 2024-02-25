@@ -1,5 +1,4 @@
-GPT
-Certainly! Below is the README description for EcoLaxy, modeled after the provided EcoPawst README:
+
 
 EcoLaxy 🌿🚀
 Welcome to EcoLaxy, the premier eco-conscious platform where sustainability meets technology, and together we pave the way towards a greener future. Join us in revolutionizing the way we interact with our environment and each other.
