@@ -54,6 +54,17 @@ export default function ChatGroup() {
   const sendMessage = async () => {
     if (!text || !group_id) return;
     try {
+      const { data: group } = await supabase
+        .from('chat_groups')
+        .select('members')
+        .eq('id', group_id)
+        .single();
+      if (group && Array.isArray(group.members) && !group.members.includes(session.user.id)) {
+        await supabase
+          .from('chat_groups')
+          .update({ members: [...group.members, session.user.id] })
+          .eq('id', group_id);
+      }
       const { data, error } = await supabase
         .from('chat_messages')
         .insert({ group_id, user_id: session.user.id, pet_id: petId || null, message: text })
