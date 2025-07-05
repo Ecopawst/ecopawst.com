@@ -66,13 +66,22 @@ CREATE TABLE chat_groups (
     members uuid[] DEFAULT ARRAY[]::uuid[]
 );
 
-CREATE TABLE chats (
+CREATE TABLE chat_messages (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     group_id uuid REFERENCES chat_groups(id) ON DELETE CASCADE,
-    sender_id uuid REFERENCES users(id),
+    user_id uuid REFERENCES users(id),
+    pet_id uuid REFERENCES pets(id),
     message text,
     created_at timestamptz NOT NULL DEFAULT now()
 );
+
+ALTER TABLE chat_messages ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "group members access messages" ON chat_messages
+  USING (
+    auth.uid() = user_id OR
+    EXISTS (SELECT 1 FROM chat_groups g WHERE g.id = group_id AND auth.uid() = ANY(g.members))
+  )
+  WITH CHECK (auth.uid() = user_id);
 
 -- Row level security policies
 ALTER TABLE pets ENABLE ROW LEVEL SECURITY;

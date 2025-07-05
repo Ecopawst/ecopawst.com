@@ -33,6 +33,7 @@ This setup is intentionally minimal to help you extend the platform quickly.
 
 Row-level security policies in `db/schema.sql` ensure pets, posts, and memorials are only accessible by their owners.
 The schema also includes a `bug_reports` table so EcoMaintainer can log error reports from the app.
+Tables `chat_groups` and `chat_messages` power the group chat system.
 
 ## Routes
 
@@ -40,7 +41,8 @@ The schema also includes a `bug_reports` table so EcoMaintainer can log error re
 - `/create-pet` – form to create a new pet profile
 - `/upload` – upload a video linked to one of your pets
 - `/feed` – view the Zoomie feed of posts
-- `/chat` – basic group chat
+- `/chat` – list chat groups
+- `/chat/[group_id]` – group messaging view
 - `/donate/[group_id]` – donation group page
 - `/memorials/[pet_id]` – memorial page for a pet
 - `/me` – dashboard showing your pets
