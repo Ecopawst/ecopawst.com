@@ -1,40 +1,63 @@
-EcoLaxy 🌿🚀: A New Era of Sustainable Digital Innovation
+# EcoPawst Starter
 
-Welcome to EcoLaxy, the forefront of merging sustainability with cutting-edge technology. As a pivotal component of the EcoAlaxy ecosystem, EcoLaxy embarks on a mission to revolutionize our interaction with the environment and each other. Our platform is not just a space but a movement towards integrating eco-consciousness into the digital realm, paving the way for a greener, more sustainable future.
+This repository provides a minimal scaffold for the EcoPawst MVP using Next.js for the frontend, Express for backend API calls, and Supabase for database/authentication. Tailwind CSS is included for a mobile-first layout.
 
-Features 🌟: Envisioning a Sustainable Digital Ecosystem
+## Structure
 
-Sustainable Profiles: Create and explore profiles that detail eco-friendly initiatives, projects, or businesses. Showcase your commitment to sustainability and connect with a network of like-minded individuals and organizations.
-Share Inspirations: Leverage the power of community by sharing photos, videos, and stories of your sustainable journeys. Inspire and be inspired by a global collective dedicated to making a positive environmental impact.
-Connect and Collaborate: Engage with a vibrant community of environmental enthusiasts. Exchange ideas, collaborate on projects, and foster connections that drive forward the mission of eco-friendly innovation.
-Eco Tips and Education: Dive into a rich repository of knowledge on sustainable living, renewable energy, waste reduction, and more. EcoLaxy is committed to raising awareness and educating its community on the best practices for a sustainable lifestyle.
-Join Us 🌍🤝: Embarking Together on a Sustainable Journey
+- `client/` – Next.js application.
+- `server/` – Express API that handles AI caption generation.
+- `db/schema.sql` – Postgres schema for Supabase.
 
-Ready to be a part of a transformative movement towards a sustainable future? EcoLaxy is your platform to connect, learn, and contribute to a greener world. Visit us now and discover how you can make a difference.
+## Development
 
-Contribute to EcoLaxy 💪: Driving Impact Through Collaboration
+1. Copy `.env.local.example` inside `client/` and fill in your Supabase credentials.
+2. Copy `.env.example` inside `server/` and add your keys.
+3. Run `npm install` inside both `client/` and `server/` directories.
+4. Start the backend server:
+   ```bash
+   cd server && npm start
+   ```
+5. In another terminal, start the Next.js dev server:
+   ```bash
+   cd client && npm run dev
+   ```
+6. Open `http://localhost:3000/login` to create or sign in to an account.
 
-EcoLaxy thrives on the collective effort of its community. We welcome contributions that amplify our impact on sustainability. Explore our CONTRIBUTING.md file for guidelines on how you can contribute to making EcoLaxy a catalyst for environmental change.
+## Video Upload Flow
 
-Thank You for Contributing to EcoLaxy 💚
+`client/pages/upload.js` shows a simplified approach for uploading a video to Cloudflare Stream. After storing the playback URL in the `posts` table, it calls the `/api/caption` route to trigger OpenAI caption generation.
 
-Your interest in EcoLaxy marks the beginning of an impactful journey. Whether it's by forking our repository, contributing to our projects, or sharing your sustainable innovations, your involvement is invaluable. Together, we can turn the tide towards a more sustainable and environmentally conscious digital world.
+The backend endpoint (`server/index.js`) receives the request, calls OpenAI, and updates the post with the generated caption in Supabase.
 
-Join Our Movement ❤️: Making a Difference, One Step at a Time
+This setup is intentionally minimal to help you extend the platform quickly.
 
-EcoLaxy is more than a platform; it's a community, a movement, a commitment to our planet. We thank you for being an integral part of this journey towards sustainability. Together, we are paving the way for a future where technology and ecology coexist in harmony.
+Row-level security policies in `db/schema.sql` ensure pets, posts, and memorials are only accessible by their owners.
+The schema also includes a `bug_reports` table so EcoMaintainer can log error reports from the app.
 
-About EcoLaxy
+## Routes
 
-EcoLaxy, at its core, is an innovative digital ecosystem designed to harmonize technology with nature. Through a comprehensive suite of platforms and initiatives, we aim to inspire, educate, and mobilize a global community towards environmental stewardship and sustainable living. Join us in redefining the relationship between digital innovation and ecological responsibility.
+- `/login` – sign in or create an account
+- `/create-pet` – form to create a new pet profile
+- `/upload` – upload a video linked to one of your pets
+- `/feed` – view the Zoomie feed of posts
+- `/chat` – basic group chat
+- `/donate/[group_id]` – donation group page
+- `/memorials/[pet_id]` – memorial page for a pet
+- `/me` – dashboard showing your pets
+- `/pets/[pet_id]` – public pet profile
+- `/pets/[pet_id]/gallery` – media gallery for a pet
+- `/pawstory/[pet_id]` – timeline of a pet's journey
+- `/groups` – list of donation groups
+- `/admin` – admin-only panel
+- `/admin/bugs` – recent bug reports for admins
 
+## Environment Variables
 
+`client/.env.local.example` and `server/.env.example` list required variables including Supabase keys, Cloudflare token, Cloudflare account ID, and Stripe keys.
 
+Future placeholders are included for planned features like AI pet voice playback and a memory chain.
 
-
-
-Message ECOSAGE Almighty Digital Soul of EcoAlaxy…
-
-​
-
-ChatGPT can make mistakes. Consider checking important information.
+### Shared Login Across Apps
+If you plan to host multiple EcoAlaxy applications, configure Supabase auth to
+use a shared cookie domain such as `.ecoalaxy.com` so users stay signed in
+across all services.
