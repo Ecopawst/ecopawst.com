@@ -7,7 +7,7 @@ import { useRouter } from 'next/router';
 export default function CreatePet() {
   const session = useSession();
   const router = useRouter();
-  const [form, setForm] = useState({ name: '', breed: '', age: '', photo: null, rescue_story: '' });
+  const [form, setForm] = useState({ name: '', breed: '', age: '', photo: null, rescue_story: '', speak_as_default: false });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 
@@ -44,7 +44,8 @@ export default function CreatePet() {
         breed: form.breed,
         age: form.age ? parseInt(form.age) : null,
         rescue_story: form.rescue_story,
-        profile_image_url: imageUrl
+        profile_image_url: imageUrl,
+        speak_as_default: form.speak_as_default
       }).select().single();
       if (error) throw error;
       setMessage('Pet profile created!');
@@ -82,6 +83,10 @@ export default function CreatePet() {
         </label>
         <label className="block">Rescue Story
           <textarea name="rescue_story" placeholder="Rescue Story" className="border p-2 w-full" onChange={handleChange}></textarea>
+        </label>
+        <label className="flex items-center space-x-2">
+          <input type="checkbox" name="speak_as_default" checked={form.speak_as_default} onChange={handleChange} />
+          <span>Use as default speaker</span>
         </label>
         <button type="submit" className="border px-4 py-2" disabled={loading}>{loading ? 'Saving...' : 'Save'}</button>
       </form>

@@ -40,9 +40,13 @@ export default function GroupPage() {
     if (!session) return;
     supabase
       .from('pets')
-      .select('id,name,profile_image_url,memorials(id)')
+      .select('id,name,profile_image_url,memorials(id),speak_as_default')
       .eq('user_id', session.user.id)
-      .then(({ data }) => setPets(data || []));
+      .then(({ data }) => {
+        setPets(data || []);
+        const def = (data || []).find(p => p.speak_as_default);
+        if (def) { setPetId(def.id); setPetSpeaking(true); }
+      });
   }, [session]);
 
   useEffect(() => {
@@ -113,7 +117,14 @@ export default function GroupPage() {
         <title>EcoPawst – A World Built for Tails</title>
         <meta name="description" content="Create pet profiles, share Zoomies, honor lost companions, and support rescue missions – all in one loving platform." />
       </Head>
-      {group && <h1 className="text-xl font-bold mb-2">{group.name}</h1>}
+      {group && (
+        <div className="mb-2 flex items-center justify-between">
+          <h1 className="text-xl font-bold">{group.name}</h1>
+          {group.is_cause && (
+            <a href={`/donate/${group.id}`} className="border px-2 py-1 text-sm">Donate</a>
+          )}
+        </div>
+      )}
       <div className="mb-2 text-sm text-gray-600">{group?.description}</div>
       <h2 className="font-semibold mt-4">Members</h2>
       <div className="flex space-x-2 mb-4">
@@ -144,7 +155,9 @@ export default function GroupPage() {
               )}
               <span>- {dayjs(m.created_at).format('HH:mm')}</span>
             </div>
-            <div>{m.message}</div>
+            <div className={m.is_pet_speaking ? 'bg-pink-50 p-1 rounded' : ''}>
+              {m.is_pet_speaking ? '🐾 ' : ''}{m.message}
+            </div>
           </div>
         ))}
       </div>
@@ -152,12 +165,14 @@ export default function GroupPage() {
         <select value={petId} onChange={e => setPetId(e.target.value)} className="border p-2">
           <option value="">Select pet</option>
           {pets.map(p => (
-            <option key={p.id} value={p.id}>{p.name}</option>
+            <option key={p.id} value={p.id}>{p.name}{p.memorials?.length ? ' 🌈' : ''}</option>
           ))}
         </select>
         <label className="flex items-center space-x-1">
           <input type="checkbox" checked={petSpeaking} onChange={e => setPetSpeaking(e.target.checked)} />
-          <span className="text-sm">🐾 Speak as pet</span>
+          <span className="text-sm">
+            🐾 Speak as {petId ? `${pets.find(p => p.id === petId)?.name}${pets.find(p => p.id === petId)?.memorials?.length ? ' 🌈' : ''}` : 'pet'}
+          </span>
         </label>
         <input value={text} onChange={e => setText(e.target.value)} className="flex-grow border p-2" placeholder="Message" />
         <button onClick={sendMessage} className="border px-4">Send</button>

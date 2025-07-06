@@ -45,7 +45,9 @@ export default function Feed() {
           height="100%"
           light
         />
-          <p className="mt-2">{p.caption}</p>
+          <p className={p.is_pet_speaking ? 'mt-2 bg-pink-50 p-1 rounded' : 'mt-2'}>
+            {p.is_pet_speaking ? '🐾 ' : ''}{p.caption}
+          </p>
         </div>
       ))}
       <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="border px-2 py-1 text-sm mt-4">Back to Top</button>

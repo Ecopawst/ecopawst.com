@@ -35,6 +35,7 @@ Row-level security policies in `db/schema.sql` ensure pets, posts, and memorials
 The schema also includes a `bug_reports` table so EcoMaintainer can log error reports from the app.
 Tables `groups`, `group_members`, and `chat_messages` power the group chat system.
 Posts and chat messages include an `is_pet_speaking` flag so guardians can post in their pet's voice.
+Each pet record has a `speak_as_default` option to remember if it should be selected automatically when chatting or posting.
 
 ## Routes
 
@@ -51,6 +52,7 @@ Posts and chat messages include an `is_pet_speaking` flag so guardians can post 
 - `/pets/[pet_id]/gallery` – media gallery for a pet
 - `/pawstory/[pet_id]` – timeline of a pet's journey
 - `/groups` – list of public groups
+- `/groups/create` – create a new group
 - `/groups/[group_id]` – group detail and chat
 - `/admin` – admin-only panel
 - `/admin/bugs` – recent bug reports for admins

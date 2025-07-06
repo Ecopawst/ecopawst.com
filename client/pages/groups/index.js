@@ -43,6 +43,7 @@ export default function Groups() {
         <meta name="description" content="Create pet profiles, share Zoomies, honor lost companions, and support rescue missions – all in one loving platform." />
       </Head>
       <h1 className="text-xl font-bold mb-2">Groups</h1>
+      <a href="/groups/create" className="border px-2 py-1 text-sm mb-2 inline-block">Create Group</a>
       <input
         placeholder="Search"
         value={search}

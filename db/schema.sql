@@ -20,6 +20,7 @@ CREATE TABLE pets (
     age integer,
     rescue_story text,
     profile_image_url text,
+    speak_as_default boolean DEFAULT false,
     created_at timestamptz NOT NULL DEFAULT now()
 );
 
@@ -67,6 +68,8 @@ CREATE TABLE groups (
     name text NOT NULL,
     description text,
     is_public boolean DEFAULT true,
+    is_cause boolean DEFAULT false,
+    pinned_post_id uuid REFERENCES posts(id),
     creator_id uuid REFERENCES users(id),
     created_at timestamptz NOT NULL DEFAULT now()
 );
