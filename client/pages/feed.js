@@ -11,7 +11,7 @@ export default function Feed() {
 
   useEffect(() => {
     const load = async () => {
-      const { data } = await supabase.from('posts').select('id, video_url, caption, pet_id, pets(name,profile_image_url)').order('created_at', { ascending: false });
+      const { data } = await supabase.from('posts').select('id, video_url, caption, pet_id, is_pet_speaking, pets(name,profile_image_url, memorials(id))').order('created_at', { ascending: false });
       setPosts(data || []);
       setLoading(false);
     };
@@ -32,7 +32,11 @@ export default function Feed() {
             {p.pets?.profile_image_url && (
               <img src={p.pets.profile_image_url} alt="Pet" className="w-8 h-8 object-cover rounded-full mr-2" />
             )}
-            <span className="font-semibold">{p.pets?.name}</span>
+            <span className="font-semibold">
+              {p.is_pet_speaking && '🐾 '}
+              {p.pets?.name}
+              {p.pets?.memorials?.length ? ' 🌈' : ''}
+            </span>
           </div>
         <ReactPlayer
           url={p.video_url}

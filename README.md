@@ -34,6 +34,7 @@ This setup is intentionally minimal to help you extend the platform quickly.
 Row-level security policies in `db/schema.sql` ensure pets, posts, and memorials are only accessible by their owners.
 The schema also includes a `bug_reports` table so EcoMaintainer can log error reports from the app.
 Tables `groups`, `group_members`, and `chat_messages` power the group chat system.
+Posts and chat messages include an `is_pet_speaking` flag so guardians can post in their pet's voice.
 
 ## Routes
 

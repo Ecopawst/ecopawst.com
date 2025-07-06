@@ -13,6 +13,7 @@ export default function ChatGroup() {
   const [text, setText] = useState('');
   const [pets, setPets] = useState([]);
   const [petId, setPetId] = useState('');
+  const [petSpeaking, setPetSpeaking] = useState(false);
 
   useEffect(() => {
     if (session === null) router.push('/login');
@@ -20,7 +21,7 @@ export default function ChatGroup() {
 
   useEffect(() => {
     if (!session) return;
-    supabase.from('pets').select('id,name,profile_image_url')
+    supabase.from('pets').select('id,name,profile_image_url,memorials(id)')
       .eq('user_id', session.user.id)
       .then(({ data }) => setPets(data || []));
   }, [session]);
@@ -30,7 +31,7 @@ export default function ChatGroup() {
     const load = async () => {
       const { data } = await supabase
         .from('chat_messages')
-        .select('id,message,created_at,user_id,pet_id,users(email,avatar_url),pets(name,profile_image_url)')
+        .select('id,message,created_at,user_id,pet_id,is_pet_speaking,users(email,avatar_url),pets(name,profile_image_url,memorials(id))')
         .eq('group_id', group_id)
         .order('created_at');
       setMessages(data || []);
@@ -40,7 +41,7 @@ export default function ChatGroup() {
       .on('postgres_changes', { event: '*', schema: 'public', table: 'chat_messages' }, payload => {
         if (payload.new.group_id === group_id) {
           supabase.from('chat_messages')
-            .select('id,message,created_at,user_id,pet_id,users(email,avatar_url),pets(name,profile_image_url)')
+            .select('id,message,created_at,user_id,pet_id,is_pet_speaking,users(email,avatar_url),pets(name,profile_image_url,memorials(id))')
             .eq('id', payload.new.id)
             .single()
             .then(({ data }) => {
@@ -65,8 +66,8 @@ export default function ChatGroup() {
       }
       const { data, error } = await supabase
         .from('chat_messages')
-        .insert({ group_id, user_id: session.user.id, pet_id: petId || null, message: text })
-        .select('id,message,created_at,user_id,pet_id,users(email,avatar_url),pets(name,profile_image_url)')
+        .insert({ group_id, user_id: session.user.id, pet_id: petId || null, is_pet_speaking: petSpeaking && petId, message: text })
+        .select('id,message,created_at,user_id,pet_id,is_pet_speaking,users(email,avatar_url),pets(name,profile_image_url,memorials(id))')
         .single();
       if (!error) {
         setMessages(m => [...m, data]);
@@ -96,10 +97,10 @@ export default function ChatGroup() {
         {messages.map(m => (
           <div key={m.id} className="mb-2">
             <div className="text-xs text-gray-500 flex items-center space-x-1">
-              {m.pet_id && m.pets ? (
+              {m.is_pet_speaking && m.pet_id && m.pets ? (
                 <>
                   {m.pets.profile_image_url && <img src={m.pets.profile_image_url} alt="Pet" className="w-5 h-5 rounded-full" />}
-                  <span>{m.pets.name}</span>
+                  <span>{m.pets.name}{m.pets.memorials?.length ? ' 🌈' : ''}</span>
                 </>
               ) : (
                 <>
@@ -115,9 +116,13 @@ export default function ChatGroup() {
       </div>
       <div className="flex items-center space-x-2 mt-2">
         <select value={petId} onChange={e => setPetId(e.target.value)} className="border p-2">
-          <option value="">Me</option>
+          <option value="">Select pet</option>
           {pets.map(p => <option key={p.id} value={p.id}>{p.name}</option>)}
         </select>
+        <label className="flex items-center space-x-1">
+          <input type="checkbox" checked={petSpeaking} onChange={e => setPetSpeaking(e.target.checked)} />
+          <span className="text-sm">🐾 Speak as pet</span>
+        </label>
         <input value={text} onChange={e => setText(e.target.value)} className="flex-grow border p-2" placeholder="Message" />
         <button onClick={sendMessage} className="border px-4">Send</button>
       </div>

@@ -30,6 +30,7 @@ CREATE TABLE posts (
     video_url text NOT NULL,
     caption text,
     tag text,
+    is_pet_speaking boolean DEFAULT false,
     flagged boolean DEFAULT false,
     created_at timestamptz NOT NULL DEFAULT now()
 );
@@ -93,6 +94,7 @@ CREATE TABLE chat_messages (
     group_id uuid REFERENCES groups(id) ON DELETE CASCADE,
     user_id uuid REFERENCES users(id),
     pet_id uuid REFERENCES pets(id),
+    is_pet_speaking boolean DEFAULT false,
     message text,
     created_at timestamptz NOT NULL DEFAULT now()
 );
@@ -103,7 +105,10 @@ CREATE POLICY "group members access messages" ON chat_messages
     auth.uid() = user_id OR
     EXISTS (SELECT 1 FROM group_members gm WHERE gm.group_id = group_id AND gm.user_id = auth.uid())
   )
-  WITH CHECK (auth.uid() = user_id);
+  WITH CHECK (
+    auth.uid() = user_id AND
+    (pet_id IS NULL OR EXISTS (SELECT 1 FROM pets p WHERE p.id = pet_id AND p.user_id = auth.uid()))
+  );
 
 -- Row level security policies
 ALTER TABLE pets ENABLE ROW LEVEL SECURITY;

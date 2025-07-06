@@ -10,6 +10,7 @@ export default function Upload() {
   const [video, setVideo] = useState(null);
   const [pets, setPets] = useState([]);
   const [petId, setPetId] = useState('');
+  const [petSpeaking, setPetSpeaking] = useState(false);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [lastUpload, setLastUpload] = useState(0);
@@ -65,7 +66,8 @@ export default function Upload() {
 
       const { data, error } = await supabase.from('posts').insert({
         pet_id: petId,
-        video_url: playbackUrl
+        video_url: playbackUrl,
+        is_pet_speaking: petSpeaking
       }).select().single();
 
       if (error) throw error;
@@ -108,6 +110,10 @@ export default function Upload() {
             <option key={p.id} value={p.id}>{p.name}</option>
           ))}
         </select>
+      </label>
+      <label className="flex items-center space-x-2">
+        <input type="checkbox" checked={petSpeaking} onChange={e => setPetSpeaking(e.target.checked)} />
+        <span>🐾 Speak as {petId ? pets.find(p => p.id === petId)?.name || 'pet' : 'pet'}</span>
       </label>
       <label className="block">Video
         <input type="file" accept="video/*" onChange={e => setVideo(e.target.files[0])} />
