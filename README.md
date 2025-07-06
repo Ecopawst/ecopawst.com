@@ -33,7 +33,7 @@ This setup is intentionally minimal to help you extend the platform quickly.
 
 Row-level security policies in `db/schema.sql` ensure pets, posts, and memorials are only accessible by their owners.
 The schema also includes a `bug_reports` table so EcoMaintainer can log error reports from the app.
-Tables `chat_groups` and `chat_messages` power the group chat system.
+Tables `groups`, `group_members`, and `chat_messages` power the group chat system.
 
 ## Routes
 
@@ -49,7 +49,8 @@ Tables `chat_groups` and `chat_messages` power the group chat system.
 - `/pets/[pet_id]` – public pet profile
 - `/pets/[pet_id]/gallery` – media gallery for a pet
 - `/pawstory/[pet_id]` – timeline of a pet's journey
-- `/groups` – list of donation groups
+- `/groups` – list of public groups
+- `/groups/[group_id]` – group detail and chat
 - `/admin` – admin-only panel
 - `/admin/bugs` – recent bug reports for admins
 

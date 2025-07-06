@@ -16,17 +16,20 @@ export default function ChatHome() {
   }, [session, router]);
 
   useEffect(() => {
-    supabase.from('chat_groups').select('*').then(({ data }) => setGroups(data || []));
+    supabase.from('groups').select('*').then(({ data }) => setGroups(data || []));
   }, []);
 
   const createGroup = async () => {
     if (!newGroup) return;
     try {
       const { data, error } = await supabase
-        .from('chat_groups')
-        .insert({ name: newGroup, members: [session.user.id] })
+        .from('groups')
+        .insert({ name: newGroup, creator_id: session.user.id })
         .select()
         .single();
+      if (!error) {
+        await supabase.from('group_members').insert({ group_id: data.id, user_id: session.user.id });
+      }
       if (!error) {
         router.push(`/chat/${data.id}`);
       }

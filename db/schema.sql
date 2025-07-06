@@ -60,15 +60,36 @@ CREATE TABLE donation_groups (
     created_at timestamptz NOT NULL DEFAULT now()
 );
 
-CREATE TABLE chat_groups (
+-- Social groups for chats and shared posts
+CREATE TABLE groups (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     name text NOT NULL,
-    members uuid[] DEFAULT ARRAY[]::uuid[]
+    description text,
+    is_public boolean DEFAULT true,
+    creator_id uuid REFERENCES users(id),
+    created_at timestamptz NOT NULL DEFAULT now()
 );
+
+CREATE TABLE group_members (
+    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+    group_id uuid REFERENCES groups(id) ON DELETE CASCADE,
+    user_id uuid REFERENCES users(id),
+    pet_id uuid REFERENCES pets(id),
+    joined_at timestamptz NOT NULL DEFAULT now()
+);
+
+ALTER TABLE groups ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "public read groups" ON groups FOR SELECT USING (true);
+CREATE POLICY "creator manage group" ON groups FOR UPDATE USING (creator_id = auth.uid()) WITH CHECK (creator_id = auth.uid());
+CREATE POLICY "logged in create group" ON groups FOR INSERT WITH CHECK (auth.uid() = creator_id);
+
+ALTER TABLE group_members ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "members view" ON group_members FOR SELECT USING (auth.uid() = user_id OR EXISTS (SELECT 1 FROM groups g WHERE g.id = group_id AND g.is_public));
+CREATE POLICY "join group" ON group_members FOR INSERT WITH CHECK (auth.uid() = user_id);
 
 CREATE TABLE chat_messages (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    group_id uuid REFERENCES chat_groups(id) ON DELETE CASCADE,
+    group_id uuid REFERENCES groups(id) ON DELETE CASCADE,
     user_id uuid REFERENCES users(id),
     pet_id uuid REFERENCES pets(id),
     message text,
@@ -79,7 +100,7 @@ ALTER TABLE chat_messages ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "group members access messages" ON chat_messages
   USING (
     auth.uid() = user_id OR
-    EXISTS (SELECT 1 FROM chat_groups g WHERE g.id = group_id AND auth.uid() = ANY(g.members))
+    EXISTS (SELECT 1 FROM group_members gm WHERE gm.group_id = group_id AND gm.user_id = auth.uid())
   )
   WITH CHECK (auth.uid() = user_id);
 

@@ -10,6 +10,7 @@ export default function Me() {
   const [pets, setPets] = useState([]);
   const [avatar, setAvatar] = useState(null);
   const [userInfo, setUserInfo] = useState(null);
+  const [myGroups, setMyGroups] = useState([]);
 
   const uploadAvatar = async () => {
     if (!avatar) return;
@@ -31,6 +32,11 @@ export default function Me() {
     if (!session) return;
     supabase.from('pets').select('*').eq('user_id', session.user.id).then(({ data }) => setPets(data || []));
     supabase.from('users').select('*').eq('id', session.user.id).single().then(({ data }) => setUserInfo(data));
+    supabase
+      .from('group_members')
+      .select('groups(id,name)')
+      .eq('user_id', session.user.id)
+      .then(({ data }) => setMyGroups(data?.map(g => g.groups) || []));
   }, [session]);
 
   if (session === undefined) return <p className="p-4">Loading...</p>;
@@ -58,6 +64,14 @@ export default function Me() {
           <span>{p.name}</span>
         </a>
       ))}
+      {myGroups.length > 0 && (
+        <>
+          <h2 className="text-lg font-bold mt-4 mb-2">My Packs</h2>
+          {myGroups.map(g => (
+            <a key={g.id} href={`/groups/${g.id}`} className="block border p-2 mb-2 hover:bg-gray-50">{g.name}</a>
+          ))}
+        </>
+      )}
     </div>
   );
 }
