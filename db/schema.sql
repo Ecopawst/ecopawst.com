@@ -77,6 +77,7 @@ CREATE TABLE group_members (
     pet_id uuid REFERENCES pets(id),
     joined_at timestamptz NOT NULL DEFAULT now()
 );
+CREATE UNIQUE INDEX group_members_unique ON group_members(group_id, user_id);
 
 ALTER TABLE groups ENABLE ROW LEVEL SECURITY;
 CREATE POLICY "public read groups" ON groups FOR SELECT USING (true);
@@ -127,20 +128,6 @@ CREATE POLICY "owners manage memorials" ON memorials
     EXISTS (SELECT 1 FROM pets p WHERE p.id = pet_id AND p.user_id = auth.uid())
   );
 
-CREATE TABLE bugs (
-    id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-    type text,
-    message text,
-    stack text,
-    context jsonb,
-    created_at timestamptz NOT NULL DEFAULT now()
-);
-
-ALTER TABLE bugs ENABLE ROW LEVEL SECURITY;
-CREATE POLICY "allow bug insert" ON bugs FOR INSERT WITH CHECK (true);
-CREATE POLICY "admin view bugs" ON bugs FOR SELECT USING (
-  EXISTS (SELECT 1 FROM users u WHERE u.id = auth.uid() AND u.role = 'admin')
-);
 
 CREATE TABLE bug_reports (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
