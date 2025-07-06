@@ -54,7 +54,7 @@ export default function Groups() {
         .filter(g => g.name.toLowerCase().includes(search.toLowerCase()))
         .map(g => (
           <div key={g.id} className="border p-2 mb-2 flex justify-between">
-            <span>{g.name}</span>
+            <span>{g.name}{g.is_donation_group ? ' 💳' : ''}</span>
             <button onClick={() => join(g.id)} className="border px-2">Join</button>
           </div>
         ))}

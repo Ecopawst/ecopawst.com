@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useSession } from '@supabase/auth-helpers-react';
 import { useRouter } from 'next/router';
@@ -7,12 +7,21 @@ import { supabase } from '../../lib/supabase';
 export default function CreateGroup() {
   const session = useSession();
   const router = useRouter();
-  const [form, setForm] = useState({ name: '', description: '', is_public: true, is_cause: false });
+  const [form, setForm] = useState({ name: '', description: '', is_public: true, is_donation_group: false, donation_group_id: '' });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [donationGroups, setDonationGroups] = useState([]);
 
   if (session === undefined) return <p className="p-4">Loading...</p>;
   if (!session) return null;
+
+  useEffect(() => {
+    if (!session) return;
+    supabase
+      .from('donation_groups')
+      .select('id,name')
+      .then(({ data }) => setDonationGroups(data || []));
+  }, [session]);
 
   const handleChange = e => {
     const { name, value, type, checked } = e.target;
@@ -28,7 +37,8 @@ export default function CreateGroup() {
         name: form.name,
         description: form.description,
         is_public: form.is_public,
-        is_cause: form.is_cause,
+        is_donation_group: form.is_donation_group,
+        donation_group_id: form.is_donation_group ? form.donation_group_id || null : null,
         creator_id: session.user.id
       }).select().single();
       if (error) throw error;
@@ -65,9 +75,19 @@ export default function CreateGroup() {
           <span>Public Group</span>
         </label>
         <label className="flex items-center space-x-2">
-          <input type="checkbox" name="is_cause" checked={form.is_cause} onChange={handleChange} />
-          <span>Cause (enable donations)</span>
+          <input type="checkbox" name="is_donation_group" checked={form.is_donation_group} onChange={handleChange} />
+          <span>💳 This group accepts donations</span>
         </label>
+        {form.is_donation_group && (
+          <label className="block">Donation Group
+            <select name="donation_group_id" value={form.donation_group_id} onChange={handleChange} className="border p-2 w-full">
+              <option value="">Select or create</option>
+              {donationGroups.map(d => (
+                <option key={d.id} value={d.id}>{d.name}</option>
+              ))}
+            </select>
+          </label>
+        )}
         <button type="submit" className="border px-4 py-2" disabled={loading}>{loading ? 'Saving...' : 'Create'}</button>
       </form>
       {message && <p className="mt-2">{message}</p>}

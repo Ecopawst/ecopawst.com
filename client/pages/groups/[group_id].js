@@ -10,6 +10,7 @@ export default function GroupPage() {
   const router = useRouter();
   const { group_id } = router.query;
   const [group, setGroup] = useState(null);
+  const [donationGroup, setDonationGroup] = useState(null);
   const [members, setMembers] = useState([]);
   const [messages, setMessages] = useState([]);
   const [text, setText] = useState('');
@@ -28,7 +29,17 @@ export default function GroupPage() {
       .select('*')
       .eq('id', group_id)
       .single()
-      .then(({ data }) => setGroup(data));
+      .then(({ data }) => {
+        setGroup(data);
+        if (data?.is_donation_group && data.donation_group_id) {
+          supabase
+            .from('donation_groups')
+            .select('*')
+            .eq('id', data.donation_group_id)
+            .single()
+            .then(({ data }) => setDonationGroup(data));
+        }
+      });
     supabase
       .from('group_members')
       .select('id,user_id,pet_id,pets(name,profile_image_url),users(email,avatar_url)')
@@ -120,12 +131,23 @@ export default function GroupPage() {
       {group && (
         <div className="mb-2 flex items-center justify-between">
           <h1 className="text-xl font-bold">{group.name}</h1>
-          {group.is_cause && (
-            <a href={`/donate/${group.id}`} className="border px-2 py-1 text-sm">Donate</a>
+          {group.is_donation_group && donationGroup && (
+            <a href={`/donate/${donationGroup.id}`} className="border px-2 py-1 text-sm">Donate</a>
           )}
         </div>
       )}
       <div className="mb-2 text-sm text-gray-600">{group?.description}</div>
+      {group?.is_donation_group && donationGroup && (
+        <div className="mb-4">
+          <div className="h-2 bg-gray-200 rounded">
+            <div
+              className="h-2 bg-green-500 rounded"
+              style={{ width: `${Math.min(100, (donationGroup.raised_amount / donationGroup.target_amount) * 100)}%` }}
+            />
+          </div>
+          <div className="text-sm mt-1">Raised {donationGroup.raised_amount} / {donationGroup.target_amount}. Every pawprint counts.</div>
+        </div>
+      )}
       <h2 className="font-semibold mt-4">Members</h2>
       <div className="flex space-x-2 mb-4">
         {members.map(m => (

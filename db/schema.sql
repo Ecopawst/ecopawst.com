@@ -69,6 +69,8 @@ CREATE TABLE groups (
     description text,
     is_public boolean DEFAULT true,
     is_cause boolean DEFAULT false,
+    is_donation_group boolean DEFAULT false,
+    donation_group_id uuid REFERENCES donation_groups(id),
     pinned_post_id uuid REFERENCES posts(id),
     creator_id uuid REFERENCES users(id),
     created_at timestamptz NOT NULL DEFAULT now()
