@@ -80,7 +80,7 @@ export default function GroupPage() {
         .select('id')
         .eq('group_id', group_id)
         .eq('user_id', session.user.id)
-        .single();
+        .maybeSingle();
       if (!exists) {
         await supabase.from('group_members').insert({ group_id, user_id: session.user.id });
       }

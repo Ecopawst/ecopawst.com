@@ -23,9 +23,17 @@ export default function Groups() {
       router.push('/login');
       return;
     }
-    await supabase
+    const { data: exists } = await supabase
       .from('group_members')
-      .insert({ group_id: id, user_id: session.user.id });
+      .select('id')
+      .eq('group_id', id)
+      .eq('user_id', session.user.id)
+      .maybeSingle();
+    if (!exists) {
+      await supabase
+        .from('group_members')
+        .insert({ group_id: id, user_id: session.user.id });
+    }
   };
 
   return (

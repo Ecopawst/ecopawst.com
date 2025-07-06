@@ -62,5 +62,6 @@ Future placeholders are included for planned features like AI pet voice playback
 
 ### Shared Login Across Apps
 If you plan to host multiple EcoAlaxy applications, configure Supabase auth to
-use a shared cookie domain such as `.ecoalaxy.com` so users stay signed in
-across all services.
+use a shared cookie domain so users stay signed in across all services. Set
+`NEXT_PUBLIC_SUPABASE_COOKIE_DOMAIN` in `.env.local` to your domain (for example
+`\.ecoalaxy.com`) and the client will pass it to the Supabase SDK.
