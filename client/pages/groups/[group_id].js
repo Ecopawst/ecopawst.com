@@ -145,7 +145,7 @@ export default function GroupPage() {
               style={{ width: `${Math.min(100, (donationGroup.raised_amount / donationGroup.target_amount) * 100)}%` }}
             />
           </div>
-          <div className="text-sm mt-1">Raised {donationGroup.raised_amount} / {donationGroup.target_amount}. Every pawprint counts.</div>
+          <div className="text-sm mt-1">Raised {donationGroup.raised_amount} / {donationGroup.target_amount}. Thank you for helping {group.name} 🐾</div>
         </div>
       )}
       <h2 className="font-semibold mt-4">Members</h2>

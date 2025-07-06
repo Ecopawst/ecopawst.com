@@ -1,11 +1,11 @@
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).end();
-  const { groupId } = req.body;
+  const { groupId, amount, donorName } = req.body;
   try {
     const response = await fetch('http://localhost:3001/api/create-checkout-session', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ groupId })
+      body: JSON.stringify({ groupId, amount, donorName })
     });
     const data = await response.json();
     if (!response.ok) throw new Error(data.error || 'Failed');

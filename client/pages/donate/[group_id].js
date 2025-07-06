@@ -5,7 +5,7 @@ import { supabase } from '../../lib/supabase';
 
 export default function DonateGroup() {
   const router = useRouter();
-  const { group_id } = router.query;
+  const { group_id, success } = router.query;
   const [group, setGroup] = useState(null);
   const [loading, setLoading] = useState(false);
   const [donorName, setDonorName] = useState('');
@@ -18,7 +18,7 @@ export default function DonateGroup() {
       setGroup(data);
     };
     load();
-  }, [group_id]);
+  }, [group_id, success]);
 
   if (!group) return <div className="p-4">Loading...</div>;
 
@@ -52,7 +52,14 @@ export default function DonateGroup() {
       </Head>
       <h1 className="text-xl font-bold">{group.name}</h1>
       <p>{group.description}</p>
-      <p>Raised: {group.raised_amount} / {group.target_amount}</p>
+      {success && (<p className="text-green-600">Thank you for helping {group.name} 🐾</p>)}
+      <div className="h-2 bg-gray-200 rounded">
+        <div
+          className="h-2 bg-green-500 rounded"
+          style={{ width: `${Math.min(100, (group.raised_amount / group.target_amount) * 100)}%` }}
+        />
+      </div>
+      <p className="text-sm">Raised {group.raised_amount} / {group.target_amount}</p>
       <div className="space-y-2">
         <input className="border p-2 w-full" placeholder="Your name" value={donorName} onChange={e => setDonorName(e.target.value)} />
         <input className="border p-2 w-full" type="number" step="1" min="1" value={amount} onChange={e => setAmount(e.target.value)} />

@@ -59,7 +59,7 @@ Each pet record has a `speak_as_default` option to remember if it should be sele
 
 ## Environment Variables
 
-`client/.env.local.example` and `server/.env.example` list required variables including Supabase keys, Cloudflare token, Cloudflare account ID, and Stripe keys.
+`client/.env.local.example` and `server/.env.example` list required variables including Supabase keys, Cloudflare token, Cloudflare account ID, and Stripe keys. A webhook secret (`STRIPE_WEBHOOK_SECRET`) is used for verifying Stripe donation events.
 
 Future placeholders are included for planned features like AI pet voice playback and a memory chain.
 

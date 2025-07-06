@@ -10,6 +10,47 @@ function sanitize(input) {
 }
 
 const app = express();
+
+// Stripe webhook needs raw body before json middleware
+app.post('/api/stripe-webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  let event;
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+  } catch (err) {
+    console.error('Webhook signature failed.', err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  if (event.type === 'checkout.session.completed') {
+    const session = event.data.object;
+    const amount = session.amount_total / 100;
+    const groupId = session.metadata.groupId;
+    try {
+      const { data, error } = await supabase
+        .from('donation_groups')
+        .select('raised_amount')
+        .eq('id', groupId)
+        .single();
+      if (!error) {
+        await supabase
+          .from('donation_groups')
+          .update({ raised_amount: (data.raised_amount || 0) + amount })
+          .eq('id', groupId);
+      }
+    } catch (err) {
+      await reportBug({
+        type: 'StripeWebhook',
+        message: err.message,
+        stack: err.stack,
+        context: { groupId }
+      });
+      console.error(err);
+    }
+  }
+  res.json({ received: true });
+});
+
 app.use(express.json());
 
 const openai = new OpenAIApi(new Configuration({
@@ -61,9 +102,9 @@ app.post('/api/create-checkout-session', async (req, res) => {
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       line_items: [{ price_data: { currency: 'usd', unit_amount: Math.round(amount * 100), product_data: { name: group.name } }, quantity: 1 }],
-      success_url: `${req.headers.origin}/donate/${groupId}?success=1`,
+      success_url: `${req.headers.origin}/donate/${groupId}?success=1&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${req.headers.origin}/donate/${groupId}?canceled=1`,
-      payment_intent_data: { metadata: { donorName: sanitize(donorName || '') } }
+      payment_intent_data: { metadata: { donorName: sanitize(donorName || ''), groupId } }
     });
     res.json({ url: session.url });
   } catch (err) {
@@ -77,6 +118,7 @@ app.post('/api/create-checkout-session', async (req, res) => {
     res.status(500).json({ error: 'Stripe error' });
   }
 });
+
 
 const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => console.log(`Server listening on ${PORT}`));
